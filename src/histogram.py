@@ -16,10 +16,10 @@ q = 8
 img_q = tl.quantize(img,q,8)
 
 # histogram of the quantize image
-ecualize_img = tl.histogram_equalization(img_q,q,path,img_name)
+# ecualize_img = tl.histogram_equalization(img_q,q,path,img_name)
 
 # stack images
-tl.comparison(img_q,ecualize_img,img_name,q)
-tl.graph(img_q,img_name,q,False)
-tl.graph(ecualize_img,img_name,q,True)
+# tl.comparison(img_q,ecualize_img,img_name,q)
+# tl.graph(img_q,img_name,q,False)
+# tl.graph(ecualize_img,img_name,q,True)
 

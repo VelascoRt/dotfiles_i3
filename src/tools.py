@@ -6,8 +6,7 @@ import pandas as pd
 
 
 # Read images
-def read_image(image_path):
-    img = imread(image_path)
+def read_image(img):    
     if len(img.shape) == 3:
         img = rgb2gray(img)
         img = (img * 255).astype(np.float32)
@@ -19,7 +18,6 @@ def read_image(image_path):
 def quantize(img,i,k):
     q_img = (img/((2**k)-1)) * ((2**i)-1)
     return q_img
-
 
 # Make an histogram of an image
 def histogram(f,bins,normalize):
@@ -42,19 +40,20 @@ def multiply_bins(pr,l):
     return out
 
 # Saving the lut thable in a csv file
-def lut(values,path,img_name,q):
+def lut(values,q):
     df = pd.DataFrame(values)
-    df.to_csv(f"{path}{img_name}_lut{q}.csv")
+    # df.to_csv(f"{path}{img_name}_lut{q}.csv")
     return df
 
-def comparison(img1,img2,img_name,q):
+def comparison(img1,img2,q):
     comp= np.hstack((img1,img2))
-    plt.imshow(comp,cmap="gray")
-    plt.title("Ecualized image comparison")
-    plt.savefig(f"data/{img_name}{q}_ecualized_comparison.png")
-    plt.show()
+    return comp
+    #plt.imshow(comp,cmap="gray")
+    #plt.title("Ecualized image comparison")
+    #plt.savefig(f"data/{img_name}{q}_ecualized_comparison.png")
+    #plt.show()
  
-def graph(img,img_name,q,ecualized):
+def graph(img,q):
     bins = 2 ** q
     fig, (ax1,ax2) = plt.subplots(1,2)
     ax1.set_title("Image")
@@ -63,14 +62,14 @@ def graph(img,img_name,q,ecualized):
     hist = histogram(img,bins,False)
     ax2.plot(hist)
     plt.title("Image and its histogram")
-    if ecualized:
-       plt.savefig(f"data/{img_name}{q}_histogram_ecualized.png")
-    else:
-        plt.savefig(f"data/{img_name}{q}_histogram.png")
+    #if ecualized:
+       # plt.savefig(f"data/{img_name}{q}_histogram_ecualized.png")
+    #else:
+        # plt.savefig(f"data/{img_name}{q}_histogram.png")
     plt.show()
 
 # Equalize the image
-def histogram_equalization(img,q,path,img_name): 
+def histogram_equalization(img,q): 
     bins = 2 ** q
     normalize = False
     hist = histogram(img,bins,normalize)
@@ -91,7 +90,7 @@ def histogram_equalization(img,q,path,img_name):
 
     # File of the values
     values_histogram = {"Intensity count" : hist, "Intensity Probability" : pr_histogram,"Cumulative sum of Probabilities" : prcumsum_histogram,"Multiply" : multiply_histogram,"Floor": floor_histogram}
-    df = lut(values_histogram,path,img_name,q) 
+    df = lut(values_histogram,q) 
     min_hist = np.ma.masked_equal(pr,0)
     min_hist = ((min_hist - min_hist.min()) * (bins-1)) /(min_hist.max() - min_hist.min())
     lutt = np.ma.filled(min_hist,0).astype("uint8") 

@@ -34,7 +34,17 @@ class App(ctk.CTk):
         self.mainloop()
 
     def init_parameters(self):
-        self.quantized_value = ctk.DoubleVar(value = QUANTIZED_VALUE)
+
+        self.options = {
+            "image" : ctk.BooleanVar(value= True),
+            "histogram" : ctk.BooleanVar(value = False),
+            "comparison" : ctk.BooleanVar(value = False),
+            "acumulative" : ctk.BooleanVar(value = False)
+        }
+        for var in self.options.values():
+            var.trace("w",self.manipulate_image)
+
+        self.quantized_value = ctk.IntVar(value = QUANTIZED_VALUE)
         self.quantized_value.trace("w",self.manipulate_image)
 
     def manipulate_image(self, *args):
@@ -56,7 +66,7 @@ class App(ctk.CTk):
         self.image_output = ImageOutput(self,self.resize_image)
 
         self.close_button = CloseOutput(self,self.close_edit)
-        self.menu = Menu(self, self.quantized_value)
+        self.menu = Menu(self, self.quantized_value, self.options)
 
     def close_edit(self):
         self.image_output.grid_forget()

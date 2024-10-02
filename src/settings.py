@@ -1,6 +1,7 @@
 QUANTIZED_VALUE = 0
 
 # Colors
+OPTIONS = ["Image","Histogram","Comparison"]
 BACKGROUND_COLOR = "#242424"
 WHITE = "#FFF"
 GREY = "grey"

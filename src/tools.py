@@ -3,6 +3,7 @@ from skimage.io import imread
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from PIL import Image
 
 
 # Read images
@@ -45,7 +46,7 @@ def lut(values,q):
     # df.to_csv(f"{path}{img_name}_lut{q}.csv")
     return df
 
-def comparison(img1,img2,q):
+def comparison(img1,img2):
     comp= np.hstack((img1,img2))
     return comp
     #plt.imshow(comp,cmap="gray")
@@ -63,10 +64,11 @@ def graph(img,q):
     ax2.plot(hist)
     plt.title("Image and its histogram")
     #if ecualized:
-       # plt.savefig(f"data/{img_name}{q}_histogram_ecualized.png")
+    plt.savefig(f"data/image{q}_histogram_ecualized.png")
     #else:
         # plt.savefig(f"data/{img_name}{q}_histogram.png")
-    plt.show()
+    image = Image.open(f"data/image{q}_histogram_ecualized.png")
+    return image
 
 # Equalize the image
 def histogram_equalization(img,q): 

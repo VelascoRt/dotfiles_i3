@@ -34,16 +34,8 @@ class App(ctk.CTk):
         self.mainloop()
 
     def init_parameters(self):
-
-        self.options = {
-            "image" : ctk.BooleanVar(value= True),
-            "histogram" : ctk.BooleanVar(value = False),
-            "comparison" : ctk.BooleanVar(value = False),
-            "acumulative" : ctk.BooleanVar(value = False)
-        }
-        for var in self.options.values():
-            var.trace("w",self.manipulate_image)
-
+        self.options = ctk.StringVar(value = OPTIONS[0]) 
+        self.options.trace("w", self.manipulate_image) 
         self.quantized_value = ctk.IntVar(value = QUANTIZED_VALUE)
         self.quantized_value.trace("w",self.manipulate_image)
 
@@ -51,9 +43,17 @@ class App(ctk.CTk):
         self.image = read_image(np.array(self.original).astype("uint8"))
         q = math.floor(self.quantized_value.get())
         quantize_image = quantize(self.image,q,8).astype("uint8") 
-        self.image = Image.fromarray(histogram_equalization(quantize_image,q))
-        #quantizing the image
-        self.place_image()
+        self.image = Image.fromarray(histogram_equalization(quantize_image,q)) 
+        if self.options == "Image":
+            # Placing the image
+            self.place_image()
+        elif self.options == "Histogram":
+            self.image = graph(read_image(np.array(self.image).astype("uint8")),q)
+            self.place_image()
+        else:
+            original =read_image(np.array(self.original).astype("uint8"))
+            self.image = Image.fromarray(comparison(original,self.image))
+            self.place_image()
 
     # Import Image
     def import_image(self,path):
@@ -66,7 +66,10 @@ class App(ctk.CTk):
         self.image_output = ImageOutput(self,self.resize_image)
 
         self.close_button = CloseOutput(self,self.close_edit)
-        self.menu = Menu(self, self.quantized_value, self.options)
+        self.menu = Menu(self, self.quantized_value, self.options, self.callback)
+
+    def callback(self,choice):
+        self.options = choice
 
     def close_edit(self):
         self.image_output.grid_forget()

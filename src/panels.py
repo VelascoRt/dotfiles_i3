@@ -8,7 +8,7 @@ class Panel(ctk.CTkFrame):
         self.pack(fill = "x", pady = 4, ipady = 8)
 
 class DropDownPanel(ctk.CTkOptionMenu):
-    def __init__(self,parent, data_var, options):
+    def __init__(self,parent, options,callback):
         super().__init__(
             master = parent,
             values = options,
@@ -16,8 +16,8 @@ class DropDownPanel(ctk.CTkOptionMenu):
             button_color = DROPDOWN_MAIN_COLOR,
             button_hover_color = DROPDOWN_HOVER_COLOR,
             dropdown_fg_color = DROPDOWN_MENU_COLOR,
-            variable = data_var
-        )
+            command = callback
+        ) 
         self.pack(fill = "x", pady = 4)
 
 class SliderPanel(Panel):
